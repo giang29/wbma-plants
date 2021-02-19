@@ -1,7 +1,7 @@
 const url = 'http://media.mw.metropolia.fi/wbma/';
 
 const getMyInfo = (userToken) => {
-  return fetch(`${url}/users/user`, {
+  return fetch(`${url}users/user`, {
     headers: {
       'x-access-token': userToken,
     },
