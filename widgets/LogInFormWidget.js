@@ -10,6 +10,7 @@ import {logIn} from '../repository/WbmaApi';
 import validation from '../utils/validation';
 import {validator} from '../utils/validator';
 import TextInputWithErrorMessageWidget from './TextInpuWithErrorMessageWidget';
+import {Colors} from '../styles/Colors';
 
 const LogInFormWidget = () => {
   const {handleInputChange, inputs} = useLogInForm();
@@ -37,7 +38,6 @@ const LogInFormWidget = () => {
     }
   };
 
-  console.log(errors);
   return (
     <View style={styles.container}>
       <Image
@@ -48,8 +48,8 @@ const LogInFormWidget = () => {
         style={styles.textField}
         theme={{
           colors: {
-            label: '#219653',
-            primary: '#219653',
+            label: Colors.greenDark,
+            primary: Colors.greenDark,
           },
         }}
         errorMessage={errors.username}
@@ -68,8 +68,8 @@ const LogInFormWidget = () => {
         mode="outlined"
         theme={{
           colors: {
-            label: '#219653',
-            primary: '#219653',
+            label: Colors.greenDark,
+            primary: Colors.greenDark,
           },
         }}
         onChangeText={(txt) => handleInputChange('password', txt)}
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#b1f0b7',
+    backgroundColor: Colors.greenLight,
     justifyContent: 'center',
   },
   textField: {
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginStart: 16,
     marginEnd: 16,
-    backgroundColor: '#219653',
+    backgroundColor: Colors.greenDark,
   },
   logo: {
     marginTop: 16,

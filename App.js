@@ -2,14 +2,15 @@ import React from 'react';
 import ContextWrapper from './context/ContextWrapper';
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import RootScreen from './screens/RootScreen';
+import {Colors} from './styles/Colors';
 
 const theme = {
   ...DefaultTheme,
   roundness: 2,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#b1f0b7',
-    accent: '#219653',
+    primary: Colors.greenLight,
+    accent: Colors.greenDark,
   },
 };
 

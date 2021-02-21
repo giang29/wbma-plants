@@ -11,7 +11,6 @@ const validator = (field, value, constraints) => {
   const constraint = constraints[field];
   const result = validate(object, {[field]: constraint});
   if (result) {
-    console.log(result);
     return result[field][0];
   }
   return null;

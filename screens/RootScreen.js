@@ -5,6 +5,10 @@ import {getMyInfo} from '../repository/WbmaApi';
 import {UserInfoContext} from '../context/UserInfoContext';
 import SplashScreen from './SplashScreen';
 import LoginScreen from './LoginScreen';
+import Navigator from './Navigator';
+import {SafeAreaView, StyleSheet} from 'react-native';
+import {Colors} from '../styles/Colors';
+import {StatusBar} from 'expo-status-bar';
 
 const RootScreen = () => {
   const viewState = rootScreenEffect([]);
@@ -19,10 +23,10 @@ const RootScreen = () => {
       view = <LoginScreen />;
       break;
     default:
-      view = <SplashScreen />; // whenever the stack is ready, replace this
+      view = <Navigator />;
   }
 
-  return view;
+  return <SafeAreaView style={styles.container}>{view}</SafeAreaView>;
 };
 
 const IN_PROGRESS = 0;
@@ -60,5 +64,13 @@ const rootScreenEffect = (deps) => {
   }, [token]);
   return viewState;
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.greenLight,
+    paddingTop: StatusBar.currentHeight,
+  },
+});
 
 export default RootScreen;

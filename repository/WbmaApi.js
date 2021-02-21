@@ -26,4 +26,32 @@ const logIn = (inputs) => {
   }).then((r) => r.json());
 };
 
-export {getMyInfo, logIn};
+const getPosts = () => {
+  return fetch(`${url}tags/wbma-plants-2021`).then((r) => r.json());
+};
+
+const getAvatar = (userId) => {
+  return fetch(`${url}tags/wbma-plants-2021-profile-picture:${userId}`)
+    .then((r) => r.json())
+    .then((r) => {
+      if (r[0]) {
+        return {uri: r[0]};
+      } else {
+        return require('../assets/ic-avatar.png');
+      }
+    });
+};
+
+const getMedia = (fileId) => {
+  return fetch(`${url}media/${fileId}`).then((r) => r.json());
+};
+
+const getUserInfo = (userToken, userId) => {
+  return fetch(`${url}users/${userId}`, {
+    headers: {
+      'x-access-token': userToken,
+    },
+  }).then((r) => r.json());
+};
+
+export {getMyInfo, logIn, getPosts, getUserInfo, getMedia, getAvatar};

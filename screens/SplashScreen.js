@@ -1,10 +1,11 @@
 import React from 'react';
 import {ActivityIndicator, View, StyleSheet} from 'react-native';
+import {Colors} from '../styles/Colors';
 
 const SplashScreen = () => {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="#219653" />
+      <ActivityIndicator size="large" color={Colors.greenDark} />
     </View>
   );
 };
@@ -12,7 +13,7 @@ const SplashScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#b1f0b7',
+    backgroundColor: Colors.greenLight,
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 40,
