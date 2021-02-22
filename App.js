@@ -1,21 +1,27 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import ContextWrapper from './context/ContextWrapper';
+import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
+import RootScreen from './screens/RootScreen';
+import {Colors} from './styles/Colors';
+
+const theme = {
+  ...DefaultTheme,
+  roundness: 2,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: Colors.greenLight,
+    accent: Colors.greenDark,
+  },
+};
 
 const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
+    <ContextWrapper>
+      <PaperProvider theme={theme}>
+        <RootScreen />
+      </PaperProvider>
+    </ContextWrapper>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default App;
