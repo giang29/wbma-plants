@@ -40,10 +40,7 @@ const LogInFormWidget = () => {
 
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.logo}
-        source={{uri: require('../assets/ic-plant.png')}}
-      />
+      <Image style={styles.logo} source={require('../assets/ic-plant.png')} />
       <TextInputWithErrorMessageWidget
         style={styles.textField}
         theme={{

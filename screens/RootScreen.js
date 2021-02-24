@@ -8,7 +8,6 @@ import LoginScreen from './LoginScreen';
 import Navigator from './Navigator';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {Colors} from '../styles/Colors';
-import {StatusBar} from 'expo-status-bar';
 
 const RootScreen = () => {
   const viewState = rootScreenEffect([]);
