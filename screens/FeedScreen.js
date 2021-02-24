@@ -11,8 +11,9 @@ import ListItem from '../widgets/ListItem';
 import {Colors} from '../styles/Colors';
 import {UserInfoContext} from '../context/UserInfoContext';
 import ToolbarWidget from '../widgets/ToolbarWidget';
+import {PropsType} from 'react-native/ReactCommon/hermes/inspector/tools/msggen/src/Type';
 
-const FeedScreen = () => {
+const FeedScreen = ({navigation}) => {
   const {token} = useContext(AuthTokenContext);
   const {user} = useContext(UserInfoContext);
   const [posts, setPosts] = useState([]);
@@ -50,7 +51,7 @@ const FeedScreen = () => {
   }, []);
   return (
     <View style={styles.container}>
-      <ToolbarWidget showSearch={true} />
+      <ToolbarWidget showSearch={true} navigation={navigation} />
       <FlatList
         style={styles.list}
         data={posts}
@@ -61,6 +62,10 @@ const FeedScreen = () => {
       />
     </View>
   );
+};
+
+FeedScreen.propTypes = {
+  navigation: PropsType.object,
 };
 
 const styles = StyleSheet.create({

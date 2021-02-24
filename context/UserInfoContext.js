@@ -5,9 +5,10 @@ const UserInfoContext = React.createContext({});
 
 const UserInfoProvider = (props) => {
   const [user, setUser] = useState({});
+  const [userImage, setUserImage] = useState({});
 
   return (
-    <UserInfoContext.Provider value={{user, setUser}}>
+    <UserInfoContext.Provider value={{user, setUser, userImage, setUserImage}}>
       {props.children}
     </UserInfoContext.Provider>
   );
