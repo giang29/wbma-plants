@@ -10,6 +10,7 @@ import {AuthTokenContext} from '../context/AuthTokenContext';
 import ListItem from '../widgets/ListItem';
 import {Colors} from '../styles/Colors';
 import {UserInfoContext} from '../context/UserInfoContext';
+import ToolbarWidget from '../widgets/ToolbarWidget';
 
 const FeedScreen = () => {
   const {token} = useContext(AuthTokenContext);
@@ -49,6 +50,7 @@ const FeedScreen = () => {
   }, []);
   return (
     <View style={styles.container}>
+      <ToolbarWidget showSearch={true} />
       <FlatList
         style={styles.list}
         data={posts}
@@ -67,8 +69,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.greenLight,
     alignItems: 'center',
     justifyContent: 'center',
+    flexWrap: 'wrap',
   },
   list: {
+    marginTop: 8,
     width: '100%',
   },
 });
