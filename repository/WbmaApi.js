@@ -54,4 +54,49 @@ const getUserInfo = (userToken, userId) => {
   }).then((r) => r.json());
 };
 
-export {getMyInfo, logIn, getPosts, getUserInfo, getMedia, getAvatar};
+const addToFavourite = (fileId, userToken) => {
+  return fetch(`${url}favourites/file/${fileId}`, {
+    method: 'POST',
+    headers: {
+      'x-access-token': userToken,
+    },
+  });
+};
+
+const removeFromFavourite = (fileId, userToken) => {
+  return fetch(`${url}favourites/file/${fileId}`, {
+    method: 'DELETE',
+    headers: {
+      'x-access-token': userToken,
+    },
+  });
+};
+
+const getFavourites = (userToken) => {
+  return fetch(`${url}favourites`, {
+    headers: {
+      'x-access-token': userToken,
+    },
+  })
+    .then((r) => r.json())
+    .then((r) => r.map((f) => f.file_id));
+};
+
+const getFavouritesOfFile = (fileId) => {
+  return fetch(`${url}favourites/file/${fileId}`)
+    .then((r) => r.json())
+    .then((r) => r.map((f) => f.file_id));
+};
+
+export {
+  getMyInfo,
+  logIn,
+  getPosts,
+  getUserInfo,
+  getMedia,
+  getAvatar,
+  addToFavourite,
+  removeFromFavourite,
+  getFavourites,
+  getFavouritesOfFile,
+};
