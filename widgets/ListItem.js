@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {Avatar, Card, IconButton, Text} from 'react-native-paper';
+import {Avatar, Button, Card, IconButton, Text} from 'react-native-paper';
 import PropTypes from 'prop-types';
 import {View, StyleSheet} from 'react-native';
 import {Colors} from '../styles/Colors';
@@ -20,6 +20,7 @@ const ListItem = ({singleMedia}) => {
   const [owner, setOwner] = useState(null);
   const [avatar, setAvatar] = useState(null);
   const [favourite, setFavourite] = useState(null);
+  const [favCount, setFavCount] = useState(null);
   const [thumbnail, setThumbnail] = useState(null);
 
   const loadOwner = () => {
@@ -39,6 +40,7 @@ const ListItem = ({singleMedia}) => {
   const loadFavourite = () => {
     getFavouritesOfFile(singleMedia.file_id).then((favs) => {
       setFavourite(favs.includes(user.user_id));
+      setFavCount(favs.length);
     });
   };
 
@@ -51,8 +53,10 @@ const ListItem = ({singleMedia}) => {
   const setFav = () => {
     if (!favourite) {
       addToFavourite(singleMedia.file_id, token).then().catch();
+      setFavCount(favCount + 1);
     } else {
       removeFromFavourite(singleMedia.file_id, token).then().catch();
+      setFavCount(favCount - 1);
     }
     setFavourite(!favourite);
   };
@@ -86,22 +90,16 @@ const ListItem = ({singleMedia}) => {
           }}
         />
         <Card.Actions style={styles.actions}>
-          <IconButton
+          <Button
             icon={favIcon}
-            color={Colors.greenDark}
+            color={favourite ? Colors.greenDark : 'grey'}
             size={20}
             onPress={setFav}
-          />
-          <IconButton
-            icon="comment-outline"
-            color={Colors.greenDark}
-            size={20}
-          />
-          <IconButton
-            icon="information-outline"
-            color={Colors.greenDark}
-            size={20}
-          />
+          >
+            {favCount}
+          </Button>
+          <IconButton icon="comment-outline" color="grey" size={20} />
+          <IconButton icon="information-outline" color="grey" size={20} />
         </Card.Actions>
       </Card>
     );

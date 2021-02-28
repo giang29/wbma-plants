@@ -30,6 +30,7 @@ const LogInFormWidget = () => {
     if (!(emailError || passwordError)) {
       logIn(inputs).then((r) => {
         const token = r['token'];
+        if (token == null) return;
         return AsyncStorage.setItem('userToken', token).then(() => {
           setToken(r['token']);
           setUser(r['user']);

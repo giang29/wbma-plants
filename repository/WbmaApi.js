@@ -55,11 +55,13 @@ const getUserInfo = (userToken, userId) => {
 };
 
 const addToFavourite = (fileId, userToken) => {
-  return fetch(`${url}favourites/file/${fileId}`, {
+  return fetch(`${url}favourites`, {
     method: 'POST',
     headers: {
       'x-access-token': userToken,
+      'Content-Type': 'application/json',
     },
+    body: JSON.stringify({file_id: fileId}),
   });
 };
 
@@ -85,7 +87,7 @@ const getFavourites = (userToken) => {
 const getFavouritesOfFile = (fileId) => {
   return fetch(`${url}favourites/file/${fileId}`)
     .then((r) => r.json())
-    .then((r) => r.map((f) => f.file_id));
+    .then((r) => r.map((f) => f.user_id));
 };
 
 export {
