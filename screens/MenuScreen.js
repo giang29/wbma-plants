@@ -40,7 +40,13 @@ const MenuScreen = ({navigation}) => {
         onClick={() => navigation.navigate('FeedScreen')}
       />
       <MenuItem icon="account" title="Profile" onClick={() => {}} />
-      <MenuItem icon="magnify" title="Search" onClick={() => {}} />
+      <MenuItem
+        icon="magnify"
+        title="Search"
+        onClick={() => {
+          navigation.navigate('SearchScreen');
+        }}
+      />
       <MenuItem icon="logout" title="Log out" onClick={() => logout()} />
     </ScrollView>
   );
