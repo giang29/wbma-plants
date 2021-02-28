@@ -3,6 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
 import FeedScreen from './FeedScreen';
 import MenuScreen from './MenuScreen';
+import SearchScreen from './SearchScreen';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,11 @@ const StackScreen = () => {
         name="MenuScreen"
         component={MenuScreen}
         options={{headerShown: false, cardStyleInterpolator: slideAnimation}}
+      />
+      <Stack.Screen
+        name="SearchScreen"
+        component={SearchScreen}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );

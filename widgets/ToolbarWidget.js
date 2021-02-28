@@ -14,7 +14,12 @@ const ToolbarWidget = ({showSearch, navigation}) => {
       />
       <Image source={require('../assets/ic-plant.png')} style={styles.logo} />
       {showSearch ? (
-        <IconButton icon="magnify" color="black" size={30} />
+        <IconButton
+          icon="magnify"
+          color="black"
+          size={30}
+          onPress={() => navigation.navigate('SearchScreen')}
+        />
       ) : (
         <View style={{width: 60}} />
       )}

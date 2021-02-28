@@ -90,6 +90,17 @@ const getFavouritesOfFile = (fileId) => {
     .then((r) => r.map((f) => f.user_id));
 };
 
+const searchItems = (searchTerm, userToken) => {
+  return fetch(`${url}media/search`, {
+    method: 'POST',
+    headers: {
+      'x-access-token': userToken,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({title: searchTerm, description: searchTerm}),
+  }).then((r) => r.json());
+};
+
 export {
   getMyInfo,
   logIn,
@@ -101,4 +112,5 @@ export {
   removeFromFavourite,
   getFavourites,
   getFavouritesOfFile,
+  searchItems,
 };
