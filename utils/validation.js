@@ -1,7 +1,7 @@
 const validation = {
   email: {
     presence: {
-      message: "can't be blank",
+      message: 'cannot be blank',
     },
     email: {
       message: `'%{value}' is not a valid email address`,
@@ -10,7 +10,7 @@ const validation = {
 
   password: {
     presence: {
-      message: "can't be blank",
+      message: 'cannot be blank',
     },
     length: {
       minimum: 5,
@@ -20,7 +20,7 @@ const validation = {
 
   username: {
     presence: {
-      message: "can't be blank",
+      message: 'cannot be blank',
     },
     length: {
       minimum: 3,

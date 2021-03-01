@@ -8,12 +8,18 @@ const Stack = createStackNavigator();
 const Navigator = () => {
   return (
     <NavigationContainer>
-      <StackScreen />
+      <Stack.Navigator initialRouteName="Feed">
+        <Stack.Screen
+          name="Feed"
+          component={FeedScreen}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
-const StackScreen = () => {
+/* const StackScreen = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -23,6 +29,6 @@ const StackScreen = () => {
       />
     </Stack.Navigator>
   );
-};
+}; */
 
 export default Navigator;
