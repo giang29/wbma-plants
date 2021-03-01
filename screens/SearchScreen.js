@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {getPosts} from '../repository/WbmaApi';
-import ListItem from '../widgets/ListItem';
 import {Colors} from '../styles/Colors';
 import ToolbarWidget from '../widgets/ToolbarWidget';
 import PropTypes from 'prop-types';
 import {TextInput} from 'react-native-paper';
+import GridItem from '../widgets/GridItem';
 
 const SearchScreen = ({navigation}) => {
   const [posts, setPosts] = useState([]);
@@ -36,14 +36,19 @@ const SearchScreen = ({navigation}) => {
           }
         }}
       />
-      <FlatList
-        style={styles.list}
-        data={posts}
-        keyExtractor={(item) => item.file_id.toString()}
-        renderItem={({item}) => {
-          return <ListItem singleMedia={item} />;
-        }}
-      />
+      {idle ? (
+        <></>
+      ) : (
+        <FlatList
+          style={styles.list}
+          data={posts}
+          numColumns={2}
+          keyExtractor={(item) => item.file_id.toString()}
+          renderItem={({item}) => {
+            return <GridItem fileId={item.file_id} />;
+          }}
+        />
+      )}
     </View>
   );
 };
