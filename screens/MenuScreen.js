@@ -12,7 +12,7 @@ import MenuItem from '../widgets/MenuItem';
 import {AuthTokenContext} from '../context/AuthTokenContext';
 
 const MenuScreen = ({navigation}) => {
-  const {user, setUser, setUserImage} = useContext(UserInfoContext);
+  const {user} = useContext(UserInfoContext);
   const {setToken} = useContext(AuthTokenContext);
   const {userImage} = getUserAvatar();
   const logout = () => {
