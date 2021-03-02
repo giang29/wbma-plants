@@ -137,6 +137,17 @@ const getComments = (fileId, userToken) => {
     });
 };
 
+const addComment = (userToken, fileId, comment) => {
+  return fetch(`${url}comments`, {
+    method: 'POST',
+    headers: {
+      'x-access-token': userToken,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({file_id: fileId, comment: comment}),
+  }).then((r) => r.json());
+};
+
 export {
   getMyInfo,
   logIn,
@@ -150,4 +161,5 @@ export {
   getFavouritesOfFile,
   searchItems,
   getComments,
+  addComment,
 };
