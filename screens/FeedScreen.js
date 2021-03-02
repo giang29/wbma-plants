@@ -24,7 +24,7 @@ const FeedScreen = ({navigation}) => {
         data={posts}
         keyExtractor={(item) => item.file_id.toString()}
         renderItem={({item}) => {
-          return <ListItem singleMedia={item} />;
+          return <ListItem singleMedia={item} navigation={navigation} />;
         }}
       />
     </View>

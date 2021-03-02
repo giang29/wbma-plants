@@ -4,6 +4,7 @@ import React from 'react';
 import FeedScreen from './FeedScreen';
 import MenuScreen from './MenuScreen';
 import SearchScreen from './SearchScreen';
+import CommentScreen from './CommentScreen';
 
 const Stack = createStackNavigator();
 
@@ -46,6 +47,11 @@ const StackScreen = () => {
       <Stack.Screen
         name="SearchScreen"
         component={SearchScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CommentScreen"
+        component={CommentScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

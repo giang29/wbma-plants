@@ -13,7 +13,7 @@ import {
 } from '../repository/WbmaApi';
 import {AuthTokenContext} from '../context/AuthTokenContext';
 import {UserInfoContext} from '../context/UserInfoContext';
-const ListItem = ({singleMedia}) => {
+const ListItem = ({singleMedia, navigation}) => {
   const {token} = useContext(AuthTokenContext);
   const {user} = useContext(UserInfoContext);
 
@@ -98,7 +98,14 @@ const ListItem = ({singleMedia}) => {
           >
             {favCount}
           </Button>
-          <IconButton icon="comment-outline" color="grey" size={20} />
+          <IconButton
+            icon="comment-outline"
+            color="grey"
+            size={20}
+            onPress={() =>
+              navigation.navigate('CommentScreen', singleMedia.file_id)
+            }
+          />
           <IconButton icon="information-outline" color="grey" size={20} />
         </Card.Actions>
       </Card>
@@ -137,6 +144,7 @@ ListItem.propTypes = {
     description: PropTypes.string,
     filename: PropTypes.string,
   }),
+  navigation: PropTypes.object,
 };
 
 export default ListItem;

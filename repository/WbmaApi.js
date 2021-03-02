@@ -101,6 +101,42 @@ const searchItems = (searchTerm, userToken) => {
   }).then((r) => r.json());
 };
 
+const getComments = (fileId, userToken) => {
+  return fetch(`${url}comments/file/${fileId}`)
+    .then((r) => r.json())
+    .then((c) => {
+      const users = [...new Set(c.map((i) => i.user_id))];
+      return Promise.all(
+        users.map((u) => {
+          return Promise.all([getUserInfo(userToken, u), getAvatar(u)]).then(
+            ([user, avatar]) => {
+              return Promise.resolve({
+                userId: u,
+                username: user.username,
+                avatar: avatar,
+              });
+            }
+          );
+        })
+      )
+        .then((objects) => {
+          const map = new Map();
+          objects.forEach((obj) => map.set(obj.userId, obj));
+          return map;
+        })
+        .then((map) => {
+          return c.map((i) => {
+            return {
+              comment: i.comment,
+              username: map.get(i.user_id).username,
+              avatar: map.get(i.user_id).avatar,
+              commentId: i.comment_id,
+            };
+          });
+        });
+    });
+};
+
 export {
   getMyInfo,
   logIn,
@@ -113,4 +149,5 @@ export {
   getFavourites,
   getFavouritesOfFile,
   searchItems,
+  getComments,
 };
