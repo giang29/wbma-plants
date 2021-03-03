@@ -2,30 +2,36 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
 import FeedScreen from './FeedScreen';
-import RegisterScreen from './RegisterScreen';
+import MenuScreen from './MenuScreen';
+import SearchScreen from './SearchScreen';
+import CommentScreen from './CommentScreen';
 
 const Stack = createStackNavigator();
 
 const Navigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Feed">
-        <Stack.Screen
-          name="Feed"
-          component={FeedScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Register"
-          component={RegisterScreen}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
+      <StackScreen />
     </NavigationContainer>
   );
 };
 
-/* const StackScreen = () => {
+const slideAnimation = ({current, layouts}) => {
+  return {
+    cardStyle: {
+      transform: [
+        {
+          translateX: current.progress.interpolate({
+            inputRange: [0, 1],
+            outputRange: [-layouts.screen.width, 0],
+          }),
+        },
+      ],
+    },
+  };
+};
+
+const StackScreen = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -33,8 +39,23 @@ const Navigator = () => {
         component={FeedScreen}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="MenuScreen"
+        component={MenuScreen}
+        options={{headerShown: false, cardStyleInterpolator: slideAnimation}}
+      />
+      <Stack.Screen
+        name="SearchScreen"
+        component={SearchScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CommentScreen"
+        component={CommentScreen}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
-}; */
+};
 
 export default Navigator;

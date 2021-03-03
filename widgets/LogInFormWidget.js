@@ -30,6 +30,7 @@ const LogInFormWidget = () => {
     if (!(emailError || passwordError)) {
       logIn(inputs).then((r) => {
         const token = r['token'];
+        if (token == null) return;
         return AsyncStorage.setItem('userToken', token).then(() => {
           setToken(r['token']);
           setUser(r['user']);
@@ -40,10 +41,7 @@ const LogInFormWidget = () => {
 
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.logo}
-        source={{uri: require('../assets/ic-leaf.png')}}
-      />
+      <Image style={styles.logo} source={require('../assets/ic-plant.png')} />
       <TextInputWithErrorMessageWidget
         style={styles.textField}
         theme={{

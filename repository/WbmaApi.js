@@ -55,4 +55,112 @@ const getUserInfo = (userToken, userId) => {
   }).then((r) => r.json());
 };
 
-export {getMyInfo, logIn, getPosts, getUserInfo, getMedia, getAvatar};
+const addToFavourite = (fileId, userToken) => {
+  return fetch(`${url}favourites`, {
+    method: 'POST',
+    headers: {
+      'x-access-token': userToken,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({file_id: fileId}),
+  });
+};
+
+const removeFromFavourite = (fileId, userToken) => {
+  return fetch(`${url}favourites/file/${fileId}`, {
+    method: 'DELETE',
+    headers: {
+      'x-access-token': userToken,
+    },
+  });
+};
+
+const getFavourites = (userToken) => {
+  return fetch(`${url}favourites`, {
+    headers: {
+      'x-access-token': userToken,
+    },
+  })
+    .then((r) => r.json())
+    .then((r) => r.map((f) => f.file_id));
+};
+
+const getFavouritesOfFile = (fileId) => {
+  return fetch(`${url}favourites/file/${fileId}`)
+    .then((r) => r.json())
+    .then((r) => r.map((f) => f.user_id));
+};
+
+const searchItems = (searchTerm, userToken) => {
+  return fetch(`${url}media/search`, {
+    method: 'POST',
+    headers: {
+      'x-access-token': userToken,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({title: searchTerm, description: searchTerm}),
+  }).then((r) => r.json());
+};
+
+const getComments = (fileId, userToken) => {
+  return fetch(`${url}comments/file/${fileId}`)
+    .then((r) => r.json())
+    .then((c) => {
+      const users = [...new Set(c.map((i) => i.user_id))];
+      return Promise.all(
+        users.map((u) => {
+          return Promise.all([getUserInfo(userToken, u), getAvatar(u)]).then(
+            ([user, avatar]) => {
+              return Promise.resolve({
+                userId: u,
+                username: user.username,
+                avatar: avatar,
+              });
+            }
+          );
+        })
+      )
+        .then((objects) => {
+          const map = new Map();
+          objects.forEach((obj) => map.set(obj.userId, obj));
+          return map;
+        })
+        .then((map) => {
+          return c.map((i) => {
+            return {
+              comment: i.comment,
+              username: map.get(i.user_id).username,
+              avatar: map.get(i.user_id).avatar,
+              commentId: i.comment_id,
+            };
+          });
+        });
+    });
+};
+
+const addComment = (userToken, fileId, comment) => {
+  return fetch(`${url}comments`, {
+    method: 'POST',
+    headers: {
+      'x-access-token': userToken,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({file_id: fileId, comment: comment}),
+  }).then((r) => r.json());
+};
+
+export {
+  getMyInfo,
+  logIn,
+  getPosts,
+  getUserInfo,
+  getMedia,
+  getAvatar,
+  addToFavourite,
+  removeFromFavourite,
+  getFavourites,
+  getFavouritesOfFile,
+  searchItems,
+  getComments,
+  addComment,
+};
