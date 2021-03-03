@@ -9,6 +9,7 @@ import LoginScreen from './LoginScreen';
 import Navigator from './Navigator';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {Colors} from '../styles/Colors';
+import AuthNavigator from './AuthNavigator';
 
 const RootScreen = () => {
   const viewState = rootScreenEffect([]);
@@ -20,7 +21,7 @@ const RootScreen = () => {
       view = <SplashScreen />;
       break;
     case TOKEN_INVALID:
-      view = <LoginScreen />;
+      view = <AuthNavigator />;
       break;
     default:
       view = <Navigator />;

@@ -12,7 +12,7 @@ import {validator} from '../utils/validator';
 import TextInputWithErrorMessageWidget from './TextInpuWithErrorMessageWidget';
 import {Colors} from '../styles/Colors';
 
-const LogInFormWidget = () => {
+const LogInFormWidget = ({navigation}) => {
   const {handleInputChange, inputs} = useLogInForm();
   const {setUser} = useContext(UserInfoContext);
   const {setToken} = useContext(AuthTokenContext);
@@ -81,6 +81,14 @@ const LogInFormWidget = () => {
       >
         Log in
       </Button>
+      <Button
+        mode="outlined"
+        onPress={() => navigation.navigate('RegisterScreen')}
+        style={styles.secondaryButton}
+        labelStyle={{color: Colors.greenDark}}
+      >
+        Create an account
+      </Button>
     </View>
   );
 };
@@ -102,6 +110,11 @@ const styles = StyleSheet.create({
     marginStart: 16,
     marginEnd: 16,
     backgroundColor: Colors.greenDark,
+  },
+  secondaryButton: {
+    marginTop: 16,
+    marginStart: 16,
+    marginEnd: 16,
   },
   logo: {
     marginTop: 16,

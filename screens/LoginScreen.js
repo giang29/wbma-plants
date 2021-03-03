@@ -1,14 +1,15 @@
 import React from 'react';
 import {StyleSheet, Platform, KeyboardAvoidingView} from 'react-native';
 import LogInFormWidget from '../widgets/LogInFormWidget';
+import PropTypes from 'prop-types';
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
-      <LogInFormWidget />
+      <LogInFormWidget navigation={navigation} />
     </KeyboardAvoidingView>
   );
 };
@@ -21,5 +22,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+LoginScreen.propTypes = {
+  navigation: PropTypes.object,
+};
 
 export default LoginScreen;

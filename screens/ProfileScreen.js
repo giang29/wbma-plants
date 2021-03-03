@@ -1,99 +1,66 @@
-import React, {useContext} from 'react';
-import {StyleSheet, SafeAreaView, Text, View, ScrollView} from 'react-native';
+import React, {useContext, useState, useEffect} from 'react';
+import {StyleSheet, View, FlatList} from 'react-native';
 import PropTypes from 'prop-types';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {UserInfoContext} from '../context/UserInfoContext';
 import {AuthTokenContext} from '../context/AuthTokenContext';
+import ToolbarWidget from '../widgets/ToolbarWidget';
+import {Colors} from '../styles/Colors';
+import ProfileHeaderWidget from '../widgets/ProfileHeaderWidget';
+import {belongToPlants, getMyMedia} from '../repository/WbmaApi';
+import ProfileListItem from '../widgets/ProfileListItem';
 
 const ProfileScreen = ({navigation}) => {
-  const {setIsLoggedIn, isLoggedIn} = useContext(AuthTokenContext);
-  const logout = async () => {
-    setIsLoggedIn(false);
-    await AsyncStorage.clear();
-    if (!isLoggedIn)
-        navigation.navigate('LoginScreen');
-    }
-  };
+  const {token} = useContext(AuthTokenContext);
+
+  const [posts, setPosts] = useState([{}]);
+
+  useEffect(() => {
+    getMyMedia(token)
+      .then((p) => {
+        return Promise.all(
+          p.map((i) => {
+            return belongToPlants(i.file_id).then((belong) => {
+              if (belong) return i;
+              else return null;
+            });
+          })
+        );
+      })
+      .then((posts) => {
+        const finalPosts = posts.filter((p) => p != null);
+        setPosts([{}, ...finalPosts]);
+      });
+  }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text>Profile</Text>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.titleBar}>
-          <Ionicons name="ios-arrow-back" size={24} color="#219653"></Ionicons>
-          <Ionicons name="md-more" size={24} color="#219653"></Ionicons>
-        </View>
-
-        <View style={{alignSelf: 'center'}}>
-          <View style={styles.profileImage}>
-            <Avatar.Image size={24} source={require('../assets/favicon.png')} />
-          </View>
-
-          <View style={styles.infoContainer}>
-            <Text style={[styles.text, {fontWeight: '200', fontSize: 36}]}>
-              ({userId}
-            </Text>
-          </View>
-
-          <View style={styles.statsContainer}>
-            <View style={styles.statsBox}>
-              <Text style={[styles.text, {fontSize: 24}]}>100</Text>
-              <Text style={[styles.text, styles.subText]}>Posts</Text>
-            </View>
-          </View>
-
-          <View
-            style={[
-              styles.statsBox,
-              {borderColor: '#DFD8C8', borderLeftWidth: 1, borderRightWidth: 1},
-            ]}
-          >
-            <Text style={[styles.text, {fontSize: 24}]}>100</Text>
-            <Text style={[styles.text, styles.subText]}>Followers</Text>
-          </View>
-
-          <View style={styles.statsBox}>
-            <Text style={[styles.text, {fontSize: 24}]}>100</Text>
-            <Text style={[styles.text, styles.subText]}>Following</Text>
-          </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <ToolbarWidget showSearch={true} navigation={navigation} />
+      <FlatList
+        style={styles.list}
+        data={posts}
+        keyExtractor={(item) => {
+          if (Object.keys(item).length === 0) return 'header';
+          return item.file_id.toString();
+        }}
+        renderItem={({item}) => {
+          if (Object.keys(item).length === 0) return <ProfileHeaderWidget />;
+          return <ProfileListItem singleMedia={item} navigation={navigation} />;
+        }}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  list: {
+    width: '100%',
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.greenLight,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 40,
-  },
-  text: {
-    fontFamily: 'HelveticaNeve',
-    color: '#b1f0b7',
-  },
-  subText: {
-    fontSize: 12,
-    color: '#52570D',
-    fontWeight: '500',
-  },
-  image: {
-    flex: 1,
-    width: undefined,
-    height: undefined,
-  },
-  titleBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 24,
-    marginHorizontal: 16,
-  },
-  profileImage: {
-    width: 175,
-    height: 175,
-    borderRadius: 100,
-    overflow: 'hidden',
+    flexWrap: 'wrap',
   },
 });
 

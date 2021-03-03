@@ -5,6 +5,7 @@ import FeedScreen from './FeedScreen';
 import MenuScreen from './MenuScreen';
 import SearchScreen from './SearchScreen';
 import CommentScreen from './CommentScreen';
+import ProfileScreen from './ProfileScreen';
 
 const Stack = createStackNavigator();
 
@@ -16,7 +17,7 @@ const Navigator = () => {
   );
 };
 
-const slideAnimation = ({current, layouts}) => {
+const menuSlideAnimation = ({current, layouts}) => {
   return {
     cardStyle: {
       transform: [
@@ -24,6 +25,20 @@ const slideAnimation = ({current, layouts}) => {
           translateX: current.progress.interpolate({
             inputRange: [0, 1],
             outputRange: [-layouts.screen.width, 0],
+          }),
+        },
+      ],
+    },
+  };
+};
+const slideAnimation = ({current, layouts}) => {
+  return {
+    cardStyle: {
+      transform: [
+        {
+          translateX: current.progress.interpolate({
+            inputRange: [0, 1],
+            outputRange: [layouts.screen.width, 0],
           }),
         },
       ],
@@ -42,17 +57,25 @@ const StackScreen = () => {
       <Stack.Screen
         name="MenuScreen"
         component={MenuScreen}
-        options={{headerShown: false, cardStyleInterpolator: slideAnimation}}
+        options={{
+          headerShown: false,
+          cardStyleInterpolator: menuSlideAnimation,
+        }}
       />
       <Stack.Screen
         name="SearchScreen"
         component={SearchScreen}
-        options={{headerShown: false}}
+        options={{headerShown: false, cardStyleInterpolator: slideAnimation}}
       />
       <Stack.Screen
         name="CommentScreen"
         component={CommentScreen}
         options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={{headerShown: false, cardStyleInterpolator: slideAnimation}}
       />
     </Stack.Navigator>
   );

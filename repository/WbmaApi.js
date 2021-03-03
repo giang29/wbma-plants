@@ -27,6 +27,21 @@ const logIn = (inputs) => {
   }).then((r) => r.json());
 };
 
+const register = ({username, password, email}) => {
+  const fetchOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      username: username,
+      password: password,
+      email: email,
+    }),
+  };
+  return fetch(url + 'users', fetchOptions).then((r) => r.json());
+};
+
 const getPosts = () => {
   return fetch(`${url}tags/wbma-plants-2021`).then((r) => r.json());
 };
@@ -36,9 +51,21 @@ const getAvatar = (userId) => {
     .then((r) => r.json())
     .then((r) => {
       if (r[0]) {
-        return {uri: r[0]};
+        return {uri: `${url}uploads/${r[0].filename}`};
       } else {
         return require('../assets/ic-avatar.png');
+      }
+    });
+};
+
+const getCover = (userId) => {
+  return fetch(`${url}tags/wbma-plants-2021-cover-picture:${userId}`)
+    .then((r) => r.json())
+    .then((r) => {
+      if (r[0]) {
+        return {uri: `${url}uploads/${r[0].filename}`};
+      } else {
+        return require('../assets/img-cover.jpg');
       }
     });
 };
@@ -73,6 +100,14 @@ const removeFromFavourite = (fileId, userToken) => {
       'x-access-token': userToken,
     },
   });
+};
+
+const getMyMedia = (userToken) => {
+  return fetch(`${url}media/user`, {
+    headers: {
+      'x-access-token': userToken,
+    },
+  }).then((r) => r.json());
 };
 
 const getFavourites = (userToken) => {
@@ -149,6 +184,12 @@ const addComment = (userToken, fileId, comment) => {
   }).then((r) => r.json());
 };
 
+const belongToPlants = (fileId) => {
+  return fetch(`${url}tags/file/${fileId}`)
+    .then((r) => r.json())
+    .then((r) => r.map((i) => i.tag).includes('wbma-plants-2021'));
+};
+
 export {
   getMyInfo,
   logIn,
@@ -163,4 +204,8 @@ export {
   searchItems,
   getComments,
   addComment,
+  register,
+  getCover,
+  getMyMedia,
+  belongToPlants,
 };

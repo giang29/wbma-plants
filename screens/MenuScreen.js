@@ -28,7 +28,12 @@ const MenuScreen = ({navigation}) => {
         color="black"
         onPress={() => navigation.goBack()}
       />
-      <TouchableRipple onPress={() => console.log('ak')}>
+      <TouchableRipple
+        onPress={() => {
+          navigation.goBack();
+          navigation.navigate('ProfileScreen');
+        }}
+      >
         <View style={styles.userInfo}>
           <AvatarImage size={40} source={userImage} />
           <Text style={styles.userName}>{user.username}</Text>
@@ -39,7 +44,14 @@ const MenuScreen = ({navigation}) => {
         title="Home"
         onClick={() => navigation.navigate('FeedScreen')}
       />
-      <MenuItem icon="account" title="Profile" onClick={() => {}} />
+      <MenuItem
+        icon="account"
+        title="Profile"
+        onClick={() => {
+          navigation.goBack();
+          navigation.navigate('ProfileScreen');
+        }}
+      />
       <MenuItem
         icon="magnify"
         title="Search"
