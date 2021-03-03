@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 const url = 'http://media.mw.metropolia.fi/wbma/';
 
 const getMyInfo = (userToken) => {

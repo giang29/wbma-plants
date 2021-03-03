@@ -1,11 +1,19 @@
-import React, {useState} from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, SafeAreaView, Text, View, ScrollView} from 'react-native';
-import {Ionicons} from '@expo/vector-icons';
-import {Avatar} from 'react-native-paper';
 import PropTypes from 'prop-types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {AuthTokenContext} from '../context/AuthTokenContext';
 
 const ProfileScreen = ({navigation}) => {
-  const [avatar] = useState([]);
+  const {setIsLoggedIn, isLoggedIn} = useContext(AuthTokenContext);
+  const logout = async () => {
+    setIsLoggedIn(false);
+    await AsyncStorage.clear();
+    if (!isLoggedIn)
+        navigation.navigate('LoginScreen');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Text>Profile</Text>
