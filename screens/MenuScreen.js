@@ -59,6 +59,13 @@ const MenuScreen = ({navigation}) => {
           navigation.navigate('SearchScreen');
         }}
       />
+      <MenuItem
+        icon="plus"
+        title="Upload"
+        onClick={() => {
+          navigation.navigate('UploadScreen');
+        }}
+      />
       <MenuItem icon="logout" title="Log out" onClick={() => logout()} />
     </ScrollView>
   );
