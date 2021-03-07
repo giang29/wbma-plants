@@ -26,7 +26,7 @@ const GridItem = ({fileId}) => {
       <Card style={styles.container} elevation={4}>
         <Card.Cover
           source={{
-            uri: `${baseUrl}/uploads/${thumbnail}`,
+            uri: `${baseUrl}uploads/${thumbnail}`,
           }}
         />
       </Card>
