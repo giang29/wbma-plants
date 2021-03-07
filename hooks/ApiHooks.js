@@ -1,7 +1,4 @@
-import axios from 'axios';
-import {useContext, useEffect, useState} from 'react';
-import {MainContext} from '../context/MainContext';
-import {appIdentifier, baseUrl} from '../utils/variables';
+import {baseUrl} from '../utils/variables';
 
 // general function for fetching (options default value is empty object)
 const doFetch = async (url, options = {}) => {
@@ -17,51 +14,6 @@ const doFetch = async (url, options = {}) => {
     // if all goes well
     return json;
   }
-};
-
-const useLoadMedia = (myFilesOnly, userId) => {
-  const [mediaArray, setMediaArray] = useState([]);
-  const {update} = useContext(MainContext);
-
-  const loadMedia = async () => {
-    try {
-      const listJson = await doFetch(baseUrl + 'tags/' + appIdentifier);
-      let media = await Promise.all(
-          listJson.map(async (item) => {
-            const fileJson = await doFetch(baseUrl + 'media/' + item.file_id);
-            return fileJson;
-          }),
-      );
-      if (myFilesOnly) {
-        media = media.filter((item) => item.user_id === userId);
-      }
-      setMediaArray(media);
-    } catch (error) {
-      console.error('loadMedia error', error.message);
-    }
-  };
-  useEffect(() => {
-    loadMedia();
-  }, [update]);
-  return mediaArray;
-};
-
-const useLogin = () => {
-  const postLogin = async (userCredentials) => {
-    const options = {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(userCredentials),
-    };
-    try {
-      const userData = await doFetch(baseUrl + 'login', options);
-      return userData;
-    } catch (error) {
-      throw new Error('postLogin error: ' + error.message);
-    }
-  };
-
-  return {postLogin};
 };
 
 const useUser = () => {
@@ -130,38 +82,34 @@ const useTag = () => {
       throw new Error(error.message);
     }
   };
-  const postTag = async (tag, token) => {
+  const postTag = (tag, token) => {
     const options = {
       method: 'POST',
-      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+      headers: {
+        'x-access-token': token,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(tag),
     };
-    try {
-      const result = await doFetch(baseUrl + 'tags', options);
-      return result;
-    } catch (error) {
-      throw new Error('postTag error: ' + error.message);
-    }
+    return fetch(baseUrl + 'tags', options).then((r) => r.json());
   };
 
   return {getFilesByTag, postTag};
 };
 
 const useMedia = () => {
-  const upload = async (fd, token) => {
+  const upload = (fd, token) => {
     const options = {
       method: 'POST',
-      headers: {'x-access-token': token},
-      data: fd,
-      url: baseUrl + 'media',
+      headers: {
+        'x-access-token': token,
+        'Accept': 'application/json',
+        'Content-Type': 'multipart/form-data',
+      },
+      body: fd,
     };
-    console.log('apihooks upload', options);
-    try {
-      const response = await axios(options);
-      return response.data;
-    } catch (e) {
-      throw new Error(e.message);
-    }
+    return fetch(baseUrl + 'media', options)
+        .then((r) => r.json());
   };
 
   const updateFile = async (fileId, fileInfo, token) => {
@@ -197,4 +145,4 @@ const useMedia = () => {
   return {upload, updateFile, deleteFile};
 };
 
-export {useLoadMedia, useLogin, useUser, useTag, useMedia};
+export {useUser, useTag, useMedia};

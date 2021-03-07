@@ -1,7 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -10,22 +9,21 @@ import PropTypes from 'prop-types';
 import {Input, Text, Image, Button, Card} from 'react-native-elements';
 import useUploadForm from '../hooks/UploadHooks';
 import * as ImagePicker from 'expo-image-picker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useMedia, useTag} from '../hooks/ApiHooks';
-import {MainContext} from '../context/MainContext';
 import {appIdentifier} from '../utils/variables';
+import {AuthTokenContext} from '../context/AuthTokenContext';
 
-const Upload = ({navigation}) => {
+const UploadScreen = ({navigation}) => {
   const [image, setImage] = useState(null);
   const [filetype, setFiletype] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const {upload} = useMedia();
   const {postTag} = useTag();
-  const {update, setUpdate} = useContext(MainContext);
+  const {token} = useContext(AuthTokenContext);
 
   const {handleInputChange, inputs, uploadErrors, reset} = useUploadForm();
 
-  const doUpload = async () => {
+  const doUpload = () => {
     const formData = new FormData();
     // add text to formData
     formData.append('title', inputs.title);
@@ -40,40 +38,18 @@ const Upload = ({navigation}) => {
       name: filename,
       type: type,
     });
-    try {
-      setIsUploading(true);
-      const userToken = await AsyncStorage.getItem('userToken');
-      const resp = await upload(formData, userToken);
-      console.log('upload response', resp);
-      const tagResponse = await postTag(
-          {
-            file_id: resp.file_id,
-            tag: appIdentifier,
-          },
-          userToken,
-      );
-      console.log('posting app identifier', tagResponse);
-      Alert.alert(
-          'Upload',
-          'File uploaded',
-          [
-            {
-              text: 'Ok',
-              onPress: () => {
-                setUpdate(update + 1);
-                doReset();
-                navigation.navigate('Home');
+    setIsUploading(true);
+    upload(formData, token)
+        .then((r) => {
+          console.log(r);
+          return postTag(
+              {
+                file_id: r.file_id,
+                tag: appIdentifier,
               },
-            },
-          ],
-          {cancelable: false},
-      );
-    } catch (error) {
-      Alert.alert('Upload', 'Failed');
-      console.error(error);
-    } finally {
-      setIsUploading(false);
-    }
+              token,
+          );
+        }).finally(() => navigation.navigate('ProfileScreen'));
   };
 
   useEffect(() => {
@@ -111,7 +87,9 @@ const Upload = ({navigation}) => {
   };
 
   const doReset = () => {
+    setIsUploading(false);
     setImage(null);
+    setFiletype('');
     reset();
   };
 
@@ -157,8 +135,8 @@ const Upload = ({navigation}) => {
   );
 };
 
-Upload.propTypes = {
+UploadScreen.propTypes = {
   navigation: PropTypes.object,
 };
 
-export default Upload;
+export default UploadScreen;

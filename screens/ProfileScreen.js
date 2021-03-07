@@ -1,7 +1,6 @@
 import React, {useContext, useState, useEffect} from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
 import PropTypes from 'prop-types';
-import {UserInfoContext} from '../context/UserInfoContext';
 import {AuthTokenContext} from '../context/AuthTokenContext';
 import ToolbarWidget from '../widgets/ToolbarWidget';
 import {Colors} from '../styles/Colors';

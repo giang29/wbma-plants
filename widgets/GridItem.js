@@ -3,6 +3,7 @@ import {Card} from 'react-native-paper';
 import PropTypes from 'prop-types';
 import {StyleSheet} from 'react-native';
 import {getMedia} from '../repository/WbmaApi';
+import {baseUrl} from '../utils/variables';
 
 const GridItem = ({fileId}) => {
   const [thumbnail, setThumbnail] = useState(null);
@@ -25,7 +26,7 @@ const GridItem = ({fileId}) => {
       <Card style={styles.container} elevation={4}>
         <Card.Cover
           source={{
-            uri: `http://media.mw.metropolia.fi/wbma/uploads/${thumbnail}`,
+            uri: `${baseUrl}/uploads/${thumbnail}`,
           }}
         />
       </Card>

@@ -13,6 +13,7 @@ import {
 } from '../repository/WbmaApi';
 import {AuthTokenContext} from '../context/AuthTokenContext';
 import {UserInfoContext} from '../context/UserInfoContext';
+import {baseUrl} from '../utils/variables';
 const ListItem = ({singleMedia, navigation}) => {
   const {token} = useContext(AuthTokenContext);
   const {user} = useContext(UserInfoContext);
@@ -86,7 +87,7 @@ const ListItem = ({singleMedia, navigation}) => {
         </View>
         <Card.Cover
           source={{
-            uri: `http://media.mw.metropolia.fi/wbma/uploads/${thumbnail}`,
+            uri: `${baseUrl}uploads/${thumbnail}`,
           }}
         />
         <Card.Actions style={styles.actions}>

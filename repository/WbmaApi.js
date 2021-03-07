@@ -1,5 +1,7 @@
 /* eslint-disable indent */
-const url = 'http://media.mw.metropolia.fi/wbma/';
+import {appIdentifier} from '../utils/variables';
+
+const url = 'https://media-new.mw.metropolia.fi/wbma/';
 
 const getMyInfo = (userToken) => {
   return fetch(`${url}users/user`, {
@@ -43,7 +45,7 @@ const register = ({username, password, email}) => {
 };
 
 const getPosts = () => {
-  return fetch(`${url}tags/wbma-plants-2021`).then((r) => r.json());
+  return fetch(`${url}tags/${appIdentifier}`).then((r) => r.json());
 };
 
 const getAvatar = (userId) => {
@@ -151,9 +153,9 @@ const getComments = (fileId, userToken) => {
                 username: user.username,
                 avatar: avatar,
               });
-            }
+            },
           );
-        })
+        }),
       )
         .then((objects) => {
           const map = new Map();
@@ -187,7 +189,7 @@ const addComment = (userToken, fileId, comment) => {
 const belongToPlants = (fileId) => {
   return fetch(`${url}tags/file/${fileId}`)
     .then((r) => r.json())
-    .then((r) => r.map((i) => i.tag).includes('wbma-plants-2021'));
+    .then((r) => r.map((i) => i.tag).includes(appIdentifier));
 };
 
 export {
