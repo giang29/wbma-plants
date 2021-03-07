@@ -39,7 +39,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 0.5,
     aspectRatio: 1,
-    marginStart: 16,
+    marginStart: 8,
+    marginEnd: 8,
     marginTop: 8,
     marginBottom: 8,
   },

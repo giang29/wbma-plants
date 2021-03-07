@@ -31,8 +31,8 @@ const SearchScreen = ({navigation}) => {
           if (idle !== newIdle) setIdle(newIdle);
           if (!newIdle || txt.length !== 0) {
             getPosts()
-              .then((p) => p.filter((i) => i.title.includes(txt)))
-              .then((p) => setPosts(p));
+                .then((p) => p.filter((i) => i.title.includes(txt)))
+                .then((p) => setPosts(p));
           }
         }}
       />
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   list: {
-    marginTop: 8,
+    padding: 8,
     width: '100%',
   },
 });
