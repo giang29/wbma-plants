@@ -17,11 +17,9 @@ const ProfileScreen = ({navigation}) => {
     return navigation.addListener('focus', () => {
       getMyMedia(token)
           .then((p) => {
-            console.log(p);
             return Promise.all(
                 p.map((i) => {
                   return belongToPlants(i.file_id).then((belong) => {
-                    console.log(`${belong} ${i}`);
                     if (belong) return i;
                     else return null;
                   });
@@ -29,7 +27,6 @@ const ProfileScreen = ({navigation}) => {
             );
           })
           .then((posts) => {
-            console.log(posts);
             const finalPosts = posts.filter((p) => p != null);
             setPosts([{}, ...finalPosts]);
           });

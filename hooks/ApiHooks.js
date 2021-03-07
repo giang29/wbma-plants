@@ -18,7 +18,6 @@ const doFetch = async (url, options = {}) => {
 
 const useUser = () => {
   const postRegister = async (inputs) => {
-    console.log('trying to create user', inputs);
     const fetchOptions = {
       method: 'POST',
       headers: {
@@ -28,7 +27,6 @@ const useUser = () => {
     };
     try {
       const json = await doFetch(baseUrl + 'users', fetchOptions);
-      console.log('register resp', json);
       return json;
     } catch (e) {
       throw new Error(e.message);

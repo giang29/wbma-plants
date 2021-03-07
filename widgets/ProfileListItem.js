@@ -30,7 +30,9 @@ const ProfileListItem = ({singleMedia, navigation}) => {
           }}
         />
         <Text style={styles.title}>{singleMedia.title}</Text>
-        <Text style={styles.description}>{singleMedia.description}</Text>
+        <Text style={styles.description}>
+          {(singleMedia.name || '') + ' . ' + (singleMedia.family || '')}
+        </Text>
       </Card>
     );
   }
@@ -73,6 +75,8 @@ ProfileListItem.propTypes = {
     title: PropTypes.string,
     description: PropTypes.string,
     filename: PropTypes.string,
+    name: PropTypes.any,
+    family: PropTypes.any,
   }),
   navigation: PropTypes.object,
 };

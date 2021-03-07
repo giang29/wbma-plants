@@ -45,7 +45,8 @@ const register = ({username, password, email}) => {
 };
 
 const getPosts = () => {
-  return fetch(`${url}tags/${appIdentifier}`).then((r) => r.json());
+  return fetch(`${url}tags/${appIdentifier}`).then((r) => r.json())
+    .then((r) => r.reverse());
 };
 
 const getAvatar = (userId) => {
@@ -109,7 +110,21 @@ const getMyMedia = (userToken) => {
     headers: {
       'x-access-token': userToken,
     },
-  }).then((r) => r.json());
+  }).then((r) => r.json())
+    .then((r) => {
+      return r.reverse().map((m) => {
+        let content;
+        try {
+          content = JSON.parse(m.description);
+        } catch (e) {
+          content = {};
+        }
+        return {
+          ...m,
+          ...content,
+        };
+      });
+    });
 };
 
 const getFavourites = (userToken) => {

@@ -49,7 +49,6 @@ const UploadScreen = ({navigation}) => {
     setIsUploading(true);
     upload(formData, token)
         .then((r) => {
-          console.log(r);
           return postTag(
               {
                 file_id: r.file_id,
@@ -85,10 +84,7 @@ const UploadScreen = ({navigation}) => {
       result = await ImagePicker.launchCameraAsync(options);
     }
 
-    console.log(result);
-
     if (!result.cancelled) {
-      // console.log('pickImage result', result);
       setFiletype(result.type);
       setImage(result.uri);
     }
