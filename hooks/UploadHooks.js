@@ -20,18 +20,32 @@ const constraints = {
       message: 'min length is 5 characters',
     },
   },
+  name: {
+    presence: {
+      message: 'cannot be empty',
+    },
+    length: {
+      minimum: 2,
+      message: 'min length is 2 characters',
+    },
+  },
 };
 
 const useUploadForm = (callback) => {
   const [inputs, setInputs] = useState({
     title: '',
     description: '',
+    name: '',
+    family: '',
   });
-  const [uploadErrors, setUploadErrors] = useState({});
+  const [uploadErrors, setUploadErrors] = useState({
+    title: null,
+    name: null,
+    family: null,
+    description: null,
+  });
 
   const handleInputChange = (name, text) => {
-    // console.log(name, text);
-    // console.log('inputs state', inputs);
     setInputs((inputs) => {
       return {
         ...inputs,
@@ -47,20 +61,11 @@ const useUploadForm = (callback) => {
     });
   };
 
-  const reset = () => {
-    setInputs({
-      title: '',
-      description: '',
-    });
-    setUploadErrors({});
-  };
-
   return {
     handleInputChange,
     inputs,
     setInputs,
     uploadErrors,
-    reset,
   };
 };
 
