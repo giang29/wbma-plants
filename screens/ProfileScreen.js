@@ -1,5 +1,5 @@
-import React, {useContext, useState, useEffect} from 'react';
-import {StyleSheet, View, FlatList} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {FlatList, StyleSheet, View} from 'react-native';
 import PropTypes from 'prop-types';
 import {AuthTokenContext} from '../context/AuthTokenContext';
 import ToolbarWidget from '../widgets/ToolbarWidget';
@@ -14,22 +14,27 @@ const ProfileScreen = ({navigation}) => {
   const [posts, setPosts] = useState([{}]);
 
   useEffect(() => {
-    getMyMedia(token)
-      .then((p) => {
-        return Promise.all(
-          p.map((i) => {
-            return belongToPlants(i.file_id).then((belong) => {
-              if (belong) return i;
-              else return null;
-            });
+    return navigation.addListener('focus', () => {
+      getMyMedia(token)
+          .then((p) => {
+            console.log(p);
+            return Promise.all(
+                p.map((i) => {
+                  return belongToPlants(i.file_id).then((belong) => {
+                    console.log(`${belong} ${i}`);
+                    if (belong) return i;
+                    else return null;
+                  });
+                }),
+            );
           })
-        );
-      })
-      .then((posts) => {
-        const finalPosts = posts.filter((p) => p != null);
-        setPosts([{}, ...finalPosts]);
-      });
-  }, []);
+          .then((posts) => {
+            console.log(posts);
+            const finalPosts = posts.filter((p) => p != null);
+            setPosts([{}, ...finalPosts]);
+          });
+    });
+  }, [navigation]);
 
   return (
     <View style={styles.container}>

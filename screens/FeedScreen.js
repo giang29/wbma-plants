@@ -13,10 +13,12 @@ const FeedScreen = ({navigation}) => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    getPosts(token).then((items) => {
-      setPosts(items);
+    return navigation.addListener('focus', () => {
+      getPosts(token).then((items) => {
+        setPosts(items);
+      });
     });
-  }, []);
+  }, [navigation]);
   return (
     <View style={styles.container}>
       <ToolbarWidget showSearch={true} navigation={navigation} />
