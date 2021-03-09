@@ -23,7 +23,10 @@ const ProfileListItem = ({singleMedia, navigation}) => {
     view = <></>;
   } else {
     view = (
-      <Card style={styles.container} elevation={4}>
+      <Card style={styles.container} elevation={4}
+        onPress={() => {
+          navigation.navigate('PlantDetailScreen', singleMedia);
+        }}>
         <Card.Cover
           source={{
             uri: `${baseUrl}uploads/${thumbnail}`,

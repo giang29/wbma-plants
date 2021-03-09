@@ -45,7 +45,7 @@ const SearchScreen = ({navigation}) => {
           numColumns={2}
           keyExtractor={(item) => item.file_id.toString()}
           renderItem={({item}) => {
-            return <GridItem fileId={item.file_id} />;
+            return <GridItem fileId={item.file_id} navigation={navigation} />;
           }}
         />
       )}

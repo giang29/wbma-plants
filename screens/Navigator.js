@@ -7,6 +7,7 @@ import SearchScreen from './SearchScreen';
 import CommentScreen from './CommentScreen';
 import ProfileScreen from './ProfileScreen';
 import UploadScreen from './UploadScreen';
+import PlantDetailScreen from './PlantDetailScreen';
 
 const Stack = createStackNavigator();
 
@@ -82,6 +83,11 @@ const StackScreen = () => {
         name="UploadScreen"
         component={UploadScreen}
         options={{headerShown: false, cardStyleInterpolator: slideAnimation}}
+      />
+      <Stack.Screen
+        name="PlantDetailScreen"
+        component={PlantDetailScreen}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );

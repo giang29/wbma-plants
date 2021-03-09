@@ -46,7 +46,20 @@ const register = ({username, password, email}) => {
 
 const getPosts = () => {
   return fetch(`${url}tags/${appIdentifier}`).then((r) => r.json())
-    .then((r) => r.reverse());
+    .then((r) => {
+      return r.reverse().map((m) => {
+        let content;
+        try {
+          content = JSON.parse(m.description);
+        } catch (e) {
+          content = {};
+        }
+        return {
+          ...m,
+          ...content,
+        };
+      });
+    });
 };
 
 const getAvatar = (userId) => {

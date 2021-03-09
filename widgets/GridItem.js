@@ -5,12 +5,14 @@ import {StyleSheet} from 'react-native';
 import {getMedia} from '../repository/WbmaApi';
 import {baseUrl} from '../utils/variables';
 
-const GridItem = ({fileId}) => {
+const GridItem = ({fileId, navigation}) => {
   const [thumbnail, setThumbnail] = useState(null);
+  const [file, setFile] = useState(null);
 
   const loadThumbnail = () => {
     getMedia(fileId).then((file) => {
       setThumbnail(file.thumbnails.w160);
+      setFile(file);
     });
   };
 
@@ -23,7 +25,10 @@ const GridItem = ({fileId}) => {
     view = <></>;
   } else {
     view = (
-      <Card style={styles.container} elevation={4}>
+      <Card style={styles.container} elevation={4}
+        onPress={() => {
+          navigation.navigate('PlantDetailScreen', file);
+        }}>
         <Card.Cover
           source={{
             uri: `${baseUrl}uploads/${thumbnail}`,
@@ -48,6 +53,7 @@ const styles = StyleSheet.create({
 
 GridItem.propTypes = {
   fileId: PropTypes.number,
+  navigation: PropTypes.object,
 };
 
 export default GridItem;

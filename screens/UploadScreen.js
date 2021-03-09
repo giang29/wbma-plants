@@ -93,8 +93,8 @@ const UploadScreen = ({navigation}) => {
 
   return (
     <ScrollView style={{backgroundColor: Colors.greenLight}}>
-      <KeyboardAvoidingView behavior="padding" enabled >
-        <ToolbarWidget showSearch={false} navigation={navigation}/>
+      <KeyboardAvoidingView behavior="padding" enabled>
+        <ToolbarWidget showSearch={false} navigation={navigation} />
         <View style={{padding: 16}}>
           <Text h4>Image</Text>
           <Image
@@ -176,8 +176,7 @@ const UploadScreen = ({navigation}) => {
             mode="outlined"
             onChangeText={(txt) => handleInputChange('description', txt)}
           />
-          {isUploading ? <ActivityIndicator size="large" color="#0000ff" /> :(
-
+          {isUploading ? <ActivityIndicator size="large" color="#0000ff" /> : (
             <Button
               style={{backgroundColor: Colors.greenDark, marginTop: 16}}
               onPress={doUpload}

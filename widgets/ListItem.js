@@ -80,7 +80,10 @@ const ListItem = ({singleMedia, navigation}) => {
     view = <></>;
   } else {
     view = (
-      <Card style={styles.container} elevation={4}>
+      <Card style={styles.container} elevation={4}
+        onPress={() => {
+          navigation.navigate('PlantDetailScreen', singleMedia);
+        }}>
         <View style={styles.userInfo}>
           <Avatar.Image size={24} source={avatar} />
           <Text style={styles.username}>{owner.username}</Text>
