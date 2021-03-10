@@ -90,6 +90,26 @@ const getMedia = (fileId) => {
   return fetch(`${url}media/${fileId}`).then((r) => r.json());
 };
 
+const deleteMedia = (fileId, userToken) => {
+  return fetch(`${url}media/${fileId}`, {
+    method: 'DELETE',
+    headers: {
+      'x-access-token': userToken,
+    },
+  }).then((r) => r.json());
+};
+
+const updateMedia = (fileId, userToken, body) => {
+  return fetch(`${url}media/${fileId}`, {
+    method: 'PUT',
+    headers: {
+      'x-access-token': userToken,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  }).then((r) => r.json());
+};
+
 const getUserInfo = (userToken, userId) => {
   return fetch(`${url}users/${userId}`, {
     headers: {
@@ -238,4 +258,6 @@ export {
   getCover,
   getMyMedia,
   belongToPlants,
+  deleteMedia,
+  updateMedia,
 };

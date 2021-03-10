@@ -10,14 +10,16 @@ import {Text, Image} from 'react-native-elements';
 import useUploadForm from '../hooks/UploadHooks';
 import * as ImagePicker from 'expo-image-picker';
 import {useMedia, useTag} from '../hooks/ApiHooks';
-import {appIdentifier} from '../utils/variables';
+import {appIdentifier, baseUrl} from '../utils/variables';
 import {AuthTokenContext} from '../context/AuthTokenContext';
 import ToolbarWidget from '../widgets/ToolbarWidget';
 import {Colors} from '../styles/Colors';
 import {Button} from 'react-native-paper';
 import TextInputWithErrorMessageWidget from '../widgets/TextInpuWithErrorMessageWidget';
+import {updateMedia} from '../repository/WbmaApi';
 
-const UploadScreen = ({navigation}) => {
+const UploadScreen = ({navigation, route}) => {
+  const media = route.params;
   const [image, setImage] = useState(null);
   const [filetype, setFiletype] = useState('');
   const [isUploading, setIsUploading] = useState(false);
@@ -26,6 +28,11 @@ const UploadScreen = ({navigation}) => {
   const {token} = useContext(AuthTokenContext);
 
   const {handleInputChange, inputs, uploadErrors} = useUploadForm();
+
+  const titleRef = React.useRef();
+  const nameRef = React.useRef();
+  const familyRef = React.useRef();
+  const descriptionRef = React.useRef();
 
   const doUpload = () => {
     const formData = new FormData();
@@ -59,7 +66,28 @@ const UploadScreen = ({navigation}) => {
         }).finally(() => navigation.navigate('ProfileScreen'));
   };
 
+  const doUpdate = () => {
+    const body = {
+      title: inputs.title,
+      description: JSON.stringify({
+        name: inputs.name,
+        family: inputs.family,
+        description: inputs.description,
+      }),
+    };
+    setIsUploading(true);
+    updateMedia(media.file_id, token, body)
+        .finally(() => navigation.navigate('ProfileScreen'));
+  };
+
   useEffect(() => {
+    if (media) {
+      handleInputChange('title', media.title);
+      handleInputChange('name', media.name);
+      handleInputChange('family', media.family);
+      handleInputChange('description', media.description);
+      setImage(`${baseUrl}uploads/${media.filename}`);
+    }
     (async () => {
       if (Platform.OS !== 'web') {
         const {status} = await ImagePicker.requestCameraPermissionsAsync();
@@ -99,9 +127,10 @@ const UploadScreen = ({navigation}) => {
           <Text h4>Image</Text>
           <Image
             source={src}
-            style={{width: '55%', height: undefined, aspectRatio: 1, marginTop: 16}}
+            style={{width: '55%', height: undefined, aspectRatio: 1,
+              marginTop: 16}}
           />
-          <View style={{flexDirection: 'row', marginTop: 16}}>
+          {!media && <View style={{flexDirection: 'row', marginTop: 16}}>
             <Button
               mode="contained"
               onPress={() => pickImage(true)}
@@ -118,7 +147,7 @@ const UploadScreen = ({navigation}) => {
             >
               Camera
             </Button>
-          </View>
+          </View>}
           <Text h4 style={{marginTop: 16}}>Information</Text>
           <TextInputWithErrorMessageWidget
             theme={{
@@ -127,6 +156,8 @@ const UploadScreen = ({navigation}) => {
                 primary: Colors.greenDark,
               },
             }}
+            ref={titleRef}
+            value={inputs.title}
             errorMessage={uploadErrors.title}
             autoCapitalize="none"
             placeholder="Title"
@@ -144,6 +175,8 @@ const UploadScreen = ({navigation}) => {
             errorMessage={uploadErrors.name}
             autoCapitalize="none"
             placeholder="Name"
+            ref={nameRef}
+            value={inputs.name}
             label="Name"
             mode="outlined"
             onChangeText={(txt) => handleInputChange('name', txt)}
@@ -158,6 +191,8 @@ const UploadScreen = ({navigation}) => {
             errorMessage={uploadErrors.family}
             autoCapitalize="none"
             placeholder="Family"
+            value={inputs.family}
+            ref={familyRef}
             label="Family"
             mode="outlined"
             onChangeText={(txt) => handleInputChange('family', txt)}
@@ -172,6 +207,8 @@ const UploadScreen = ({navigation}) => {
             errorMessage={uploadErrors.description}
             autoCapitalize="none"
             placeholder="Description"
+            value={inputs.description}
+            ref={descriptionRef}
             label="Description"
             mode="outlined"
             onChangeText={(txt) => handleInputChange('description', txt)}
@@ -179,7 +216,7 @@ const UploadScreen = ({navigation}) => {
           {isUploading ? <ActivityIndicator size="large" color="#0000ff" /> : (
             <Button
               style={{backgroundColor: Colors.greenDark, marginTop: 16}}
-              onPress={doUpload}
+              onPress={media ? doUpdate : doUpload}
               mode="contained"
               labelStyle={{color: 'white'}}
               disabled={
@@ -187,7 +224,7 @@ const UploadScreen = ({navigation}) => {
                 uploadErrors.description !== null ||
                 uploadErrors.name !== null ||
                 image === null
-              }>Upload</Button>
+              }>{media ? 'Update' : 'Upload'}</Button>
           )}
         </View>
       </KeyboardAvoidingView>
@@ -197,6 +234,7 @@ const UploadScreen = ({navigation}) => {
 
 UploadScreen.propTypes = {
   navigation: PropTypes.object,
+  route: PropTypes.object,
 };
 
 export default UploadScreen;

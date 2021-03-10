@@ -12,7 +12,7 @@ import {AuthTokenContext} from '../context/AuthTokenContext';
 import ToolbarWidget from '../widgets/ToolbarWidget';
 import {Colors} from '../styles/Colors';
 import {
-  addToFavourite,
+  addToFavourite, deleteMedia,
   getAvatar, getComments,
   getFavouritesOfFile,
   getUserInfo,
@@ -79,9 +79,29 @@ const PlantDetailScreen = ({navigation, route}) => {
     });
   }, []);
 
+  let toolbar;
+  if (user.user_id === media.user_id) {
+    toolbar = (<ToolbarWidget showSearch={false} navigation={navigation}
+      menus={[{
+        icon: 'delete-empty-outline',
+        title: 'Remove this post',
+        action: () => {
+          deleteMedia(media.file_id, token)
+              .finally(() => navigation.goBack());
+        },
+      }, {
+        icon: 'square-edit-outline',
+        title: 'Edit this post',
+        action: () => {
+          navigation.navigate('UploadScreen', media);
+        },
+      }]} />);
+  } else {
+    toolbar = <ToolbarWidget showSearch={false} navigation={navigation} />;
+  }
   return (
     <View style={{backgroundColor: Colors.greenLight, flex: 1}}>
-      <ToolbarWidget showSearch={false} navigation={navigation} />
+      {toolbar}
       <ScrollView>
         <View>
           <Image source={{uri: `${baseUrl}uploads/${media.filename}`}}
@@ -120,8 +140,10 @@ const PlantDetailScreen = ({navigation, route}) => {
             opacity: 0.4, margin: 16,
           }} />
 
-          <Text style={{fontWeight: 'bold', fontSize: 18,
-            ...styles.field, marginBottom: 8}}>
+          <Text style={{
+            fontWeight: 'bold', fontSize: 18,
+            ...styles.field, marginBottom: 8,
+          }}>
             {`Comments . (${commentCount})`}
           </Text>
           {comment && <CommentItem

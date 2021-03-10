@@ -45,14 +45,6 @@ const MenuScreen = ({navigation}) => {
         onClick={() => navigation.navigate('FeedScreen')}
       />
       <MenuItem
-        icon="account"
-        title="Profile"
-        onClick={() => {
-          navigation.goBack();
-          navigation.navigate('ProfileScreen');
-        }}
-      />
-      <MenuItem
         icon="magnify"
         title="Search"
         onClick={() => {
