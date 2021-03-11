@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import {appIdentifier} from '../utils/variables';
+import {appIdentifier, baseUrl} from '../utils/variables';
 
 const url = 'https://media-new.mw.metropolia.fi/wbma/';
 
@@ -67,7 +67,11 @@ const getAvatar = (userId) => {
     .then((r) => r.json())
     .then((r) => {
       if (r[0]) {
-        return {uri: `${url}uploads/${r[0].filename}`};
+        return getMedia(r.pop().file_id)
+          .then((file) => file.thumbnails.w160)
+          .then((file) => {
+            return {uri: `${url}uploads/${file}`};
+          });
       } else {
         return require('../assets/ic-avatar.png');
       }
@@ -79,7 +83,11 @@ const getCover = (userId) => {
     .then((r) => r.json())
     .then((r) => {
       if (r[0]) {
-        return {uri: `${url}uploads/${r[0].filename}`};
+        return getMedia(r.pop().file_id)
+          .then((file) => file.thumbnails.w160)
+          .then((file) => {
+            return {uri: `${url}uploads/${file}`};
+          });
       } else {
         return require('../assets/img-cover.jpg');
       }
@@ -240,6 +248,90 @@ const belongToPlants = (fileId) => {
     .then((r) => r.map((i) => i.tag).includes(appIdentifier));
 };
 
+const uploadAvatar = (image, userId, token, filetype) => {
+  const formData = new FormData();
+  // add text to formData
+  formData.append('title', 'avatar');
+  // add image to formData
+  const filename = image.split('/').pop();
+  const match = /\.(\w+)$/.exec(filename);
+  let type = match ? `${filetype}/${match[1]}` : filetype;
+  if (type === 'image/jpg') type = 'image/jpeg';
+  formData.append('file', {
+    uri: image,
+    name: filename,
+    type: type,
+  });
+  const options = {
+    method: 'POST',
+    headers: {
+      'x-access-token': token,
+      'Accept': 'application/json',
+      'Content-Type': 'multipart/form-data',
+    },
+    body: formData,
+  };
+  return fetch(baseUrl + 'media', options)
+    .then((r) => r.json())
+    .then((r) => {
+      return postTag(
+        {
+          file_id: r.file_id,
+          tag: `wbma-plants-2021-profile-picture:${userId}`,
+        },
+        token,
+      ).then(() => r);
+    });
+};
+
+const uploadCover = (image, userId, token, filetype) => {
+  const formData = new FormData();
+  // add text to formData
+  formData.append('title', 'avatar');
+  // add image to formData
+  const filename = image.split('/').pop();
+  const match = /\.(\w+)$/.exec(filename);
+  let type = match ? `${filetype}/${match[1]}` : filetype;
+  if (type === 'image/jpg') type = 'image/jpeg';
+  formData.append('file', {
+    uri: image,
+    name: filename,
+    type: type,
+  });
+  const options = {
+    method: 'POST',
+    headers: {
+      'x-access-token': token,
+      'Accept': 'application/json',
+      'Content-Type': 'multipart/form-data',
+    },
+    body: formData,
+  };
+  return fetch(baseUrl + 'media', options)
+    .then((r) => r.json())
+    .then((r) => {
+      return postTag(
+        {
+          file_id: r.file_id,
+          tag: `wbma-plants-2021-cover-picture:${userId}`,
+        },
+        token,
+      ).then(() => r);
+    });
+};
+
+const postTag = (tag, token) => {
+  const options = {
+    method: 'POST',
+    headers: {
+      'x-access-token': token,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(tag),
+  };
+  return fetch(baseUrl + 'tags', options).then((r) => r.json());
+};
+
 export {
   getMyInfo,
   logIn,
@@ -260,4 +352,6 @@ export {
   belongToPlants,
   deleteMedia,
   updateMedia,
+  uploadAvatar,
+  uploadCover,
 };
