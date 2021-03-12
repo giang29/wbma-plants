@@ -12,8 +12,10 @@ import {AuthTokenContext} from '../context/AuthTokenContext';
 import ToolbarWidget from '../widgets/ToolbarWidget';
 import {Colors} from '../styles/Colors';
 import {
-  addToFavourite, deleteMedia,
-  getAvatar, getComments,
+  addToFavourite,
+  deleteMedia,
+  getAvatar,
+  getComments,
   getFavouritesOfFile,
   getUserInfo,
   removeFromFavourite,
@@ -56,7 +58,6 @@ const PlantDetailScreen = ({navigation, route}) => {
     });
   };
 
-
   const setFav = () => {
     if (!favourite) {
       addToFavourite(media.file_id, token).then().catch();
@@ -81,21 +82,30 @@ const PlantDetailScreen = ({navigation, route}) => {
 
   let toolbar;
   if (user.user_id === media.user_id) {
-    toolbar = (<ToolbarWidget showSearch={false} navigation={navigation}
-      menus={[{
-        icon: 'delete-empty-outline',
-        title: 'Remove this post',
-        action: () => {
-          deleteMedia(media.file_id, token)
-              .finally(() => navigation.goBack());
-        },
-      }, {
-        icon: 'square-edit-outline',
-        title: 'Edit this post',
-        action: () => {
-          navigation.navigate('UploadScreen', media);
-        },
-      }]} />);
+    toolbar = (
+      <ToolbarWidget
+        showSearch={false}
+        navigation={navigation}
+        menus={[
+          {
+            icon: 'delete-empty-outline',
+            title: 'Remove this post',
+            action: () => {
+              deleteMedia(media.file_id, token).finally(() => {
+                navigation.goBack();
+              });
+            },
+          },
+          {
+            icon: 'square-edit-outline',
+            title: 'Edit this post',
+            action: () => {
+              navigation.navigate('UploadScreen', media);
+            },
+          },
+        ]}
+      />
+    );
   } else {
     toolbar = <ToolbarWidget showSearch={false} navigation={navigation} />;
   }
@@ -104,8 +114,10 @@ const PlantDetailScreen = ({navigation, route}) => {
       {toolbar}
       <ScrollView>
         <View>
-          <Image source={{uri: `${baseUrl}uploads/${media.filename}`}}
-            style={styles.image} />
+          <Image
+            source={{uri: `${baseUrl}uploads/${media.filename}`}}
+            style={styles.image}
+          />
           <View style={styles.userInfo}>
             <AvatarImage size={40} source={avatar} />
             <Text style={styles.userName}>{owner.username}</Text>
@@ -135,25 +147,37 @@ const PlantDetailScreen = ({navigation, route}) => {
             <Text>{media.description}</Text>
           </Text>
 
-          <View style={{
-            backgroundColor: '#000000', height: 1,
-            opacity: 0.4, margin: 16,
-          }} />
+          <View
+            style={{
+              backgroundColor: '#000000',
+              height: 1,
+              opacity: 0.4,
+              margin: 16,
+            }}
+          />
 
-          <Text style={{
-            fontWeight: 'bold', fontSize: 18,
-            ...styles.field, marginBottom: 8,
-          }}>
+          <Text
+            style={{
+              fontWeight: 'bold',
+              fontSize: 18,
+              ...styles.field,
+              marginBottom: 8,
+            }}
+          >
             {`Comments . (${commentCount})`}
           </Text>
-          {comment && <CommentItem
-            comment={comment.comment}
-            username={comment.username}
-            avatar={comment.avatar}
-          />}
-          <TouchableWithoutFeedback onPress={() => {
-            navigation.navigate('CommentScreen', media.file_id);
-          }}>
+          {comment && (
+            <CommentItem
+              comment={comment.comment}
+              username={comment.username}
+              avatar={comment.avatar}
+            />
+          )}
+          <TouchableWithoutFeedback
+            onPress={() => {
+              navigation.navigate('CommentScreen', media.file_id);
+            }}
+          >
             <View>
               <TextInput
                 style={{marginTop: 8}}

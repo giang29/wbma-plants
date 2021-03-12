@@ -3,7 +3,8 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  ScrollView, View,
+  ScrollView,
+  View,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import {Text, Image} from 'react-native-elements';
@@ -29,20 +30,18 @@ const UploadScreen = ({navigation, route}) => {
 
   const {handleInputChange, inputs, uploadErrors} = useUploadForm();
 
-  const titleRef = React.useRef();
-  const nameRef = React.useRef();
-  const familyRef = React.useRef();
-  const descriptionRef = React.useRef();
-
   const doUpload = () => {
     const formData = new FormData();
     // add text to formData
     formData.append('title', inputs.title);
-    formData.append('description', JSON.stringify({
-      name: inputs.name,
-      family: inputs.family,
-      description: inputs.description,
-    }));
+    formData.append(
+      'description',
+      JSON.stringify({
+        name: inputs.name,
+        family: inputs.family,
+        description: inputs.description,
+      })
+    );
     // add image to formData
     const filename = image.split('/').pop();
     const match = /\.(\w+)$/.exec(filename);
@@ -55,15 +54,18 @@ const UploadScreen = ({navigation, route}) => {
     });
     setIsUploading(true);
     upload(formData, token)
-        .then((r) => {
-          return postTag(
-              {
-                file_id: r.file_id,
-                tag: appIdentifier,
-              },
-              token,
-          );
-        }).finally(() => navigation.navigate('ProfileScreen'));
+      .then((r) => {
+        return postTag(
+          {
+            file_id: r.file_id,
+            tag: appIdentifier,
+          },
+          token
+        );
+      })
+      .finally(() => {
+        navigation.goBack();
+      });
   };
 
   const doUpdate = () => {
@@ -76,8 +78,7 @@ const UploadScreen = ({navigation, route}) => {
       }),
     };
     setIsUploading(true);
-    updateMedia(media.file_id, token, body)
-        .finally(() => navigation.navigate('ProfileScreen'));
+    updateMedia(media.file_id, token, body).finally(() => navigation.goBack());
   };
 
   useEffect(() => {
@@ -127,28 +128,36 @@ const UploadScreen = ({navigation, route}) => {
           <Text h4>Image</Text>
           <Image
             source={src}
-            style={{width: '55%', height: undefined, aspectRatio: 1,
-              marginTop: 16}}
+            style={{
+              width: '55%',
+              height: undefined,
+              aspectRatio: 1,
+              marginTop: 16,
+            }}
           />
-          {!media && <View style={{flexDirection: 'row', marginTop: 16}}>
-            <Button
-              mode="contained"
-              onPress={() => pickImage(true)}
-              labelStyle={{color: 'white'}}
-              style={{backgroundColor: Colors.greenDark}}
-            >
-              Gallery
-            </Button>
-            <Button
-              mode="contained"
-              onPress={() => pickImage(false)}
-              labelStyle={{color: 'white'}}
-              style={{marginStart: 16, backgroundColor: Colors.greenDark}}
-            >
-              Camera
-            </Button>
-          </View>}
-          <Text h4 style={{marginTop: 16}}>Information</Text>
+          {!media && (
+            <View style={{flexDirection: 'row', marginTop: 16}}>
+              <Button
+                mode="contained"
+                onPress={() => pickImage(true)}
+                labelStyle={{color: 'white'}}
+                style={{backgroundColor: Colors.greenDark}}
+              >
+                Gallery
+              </Button>
+              <Button
+                mode="contained"
+                onPress={() => pickImage(false)}
+                labelStyle={{color: 'white'}}
+                style={{marginStart: 16, backgroundColor: Colors.greenDark}}
+              >
+                Camera
+              </Button>
+            </View>
+          )}
+          <Text h4 style={{marginTop: 16}}>
+            Information
+          </Text>
           <TextInputWithErrorMessageWidget
             theme={{
               colors: {
@@ -156,7 +165,6 @@ const UploadScreen = ({navigation, route}) => {
                 primary: Colors.greenDark,
               },
             }}
-            ref={titleRef}
             value={inputs.title}
             errorMessage={uploadErrors.title}
             autoCapitalize="none"
@@ -175,7 +183,6 @@ const UploadScreen = ({navigation, route}) => {
             errorMessage={uploadErrors.name}
             autoCapitalize="none"
             placeholder="Name"
-            ref={nameRef}
             value={inputs.name}
             label="Name"
             mode="outlined"
@@ -192,7 +199,6 @@ const UploadScreen = ({navigation, route}) => {
             autoCapitalize="none"
             placeholder="Family"
             value={inputs.family}
-            ref={familyRef}
             label="Family"
             mode="outlined"
             onChangeText={(txt) => handleInputChange('family', txt)}
@@ -208,12 +214,13 @@ const UploadScreen = ({navigation, route}) => {
             autoCapitalize="none"
             placeholder="Description"
             value={inputs.description}
-            ref={descriptionRef}
             label="Description"
             mode="outlined"
             onChangeText={(txt) => handleInputChange('description', txt)}
           />
-          {isUploading ? <ActivityIndicator size="large" color="#0000ff" /> : (
+          {isUploading ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : (
             <Button
               style={{backgroundColor: Colors.greenDark, marginTop: 16}}
               onPress={media ? doUpdate : doUpload}
@@ -224,7 +231,10 @@ const UploadScreen = ({navigation, route}) => {
                 uploadErrors.description !== null ||
                 uploadErrors.name !== null ||
                 image === null
-              }>{media ? 'Update' : 'Upload'}</Button>
+              }
+            >
+              {media ? 'Update' : 'Upload'}
+            </Button>
           )}
         </View>
       </KeyboardAvoidingView>
